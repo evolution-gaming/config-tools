@@ -57,11 +57,13 @@ class ConfigHelperSpec extends FunSuite with Matchers {
   }
 
   test("getOpt") {
-    val config = ConfigFactory.parseString("key:value")
-    config.getOpt[String]("key") shouldEqual Some("value")
+    val config = ConfigFactory.parseString("key1:value1\nkey2:value2")
+    config.getOpt[String]("key1") shouldEqual Some("value1")
     config.getOpt[String]("unknown") shouldEqual None
+    config.getOpt[String]("key2", "key1") shouldEqual Some("value2")
+    config.getOpt[String]("key", "key1") shouldEqual Some("value1")
     intercept[Exception] {
-      config.getOpt[Long]("key")
+      config.getOpt[Long]("key1")
     }
   }
 

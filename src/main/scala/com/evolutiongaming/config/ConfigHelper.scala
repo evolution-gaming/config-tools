@@ -2,6 +2,7 @@ package com.evolutiongaming.config
 
 import com.typesafe.config.Config
 
+import scala.annotation.tailrec
 import scala.collection.JavaConverters._
 import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}
 
@@ -11,8 +12,16 @@ object ConfigHelper {
 
     def get[T](path: String)(implicit fromConf: FromConf[T]): T = fromConf(config, path)
 
-    def getOpt[T](path: String)(implicit fromConf: FromConf[Option[T]]): Option[T] = {
-      get[Option[T]](path)
+    def getOpt[T](path: String, paths: String*)(implicit fromConf: FromConf[Option[T]]): Option[T] = {
+      @tailrec def getOpt(paths: List[String]): Option[T] = paths match {
+        case Nil           => None
+        case path :: paths => get[Option[T]](path) match {
+          case None        => getOpt(paths)
+          case Some(value) => Some(value)
+        }
+      }
+
+      getOpt(path :: paths.toList)
     }
 
     def getOrElse[T: FromConf](path: String, fallbackPath: => String): T = {
