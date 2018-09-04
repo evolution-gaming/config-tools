@@ -12,6 +12,12 @@
   config.getOpt[FiniteDuration]("path") // Option[FiniteDuration]
   
   config.get[String]("path") // String
+  
+  ConfigFactory.parseString("key:[1,2]").get[List[Int]]("key") // List(1,2)
+  
+  ConfigFactory.parseString("""key:"1,2" """).get[List[Int]]("key") // List(1,2)
+  
+  ConfigFactory.parseString("""key:"1;2" """).get[List[Int]]("key") // List(1,2)
 ```
 
 ## Setup
