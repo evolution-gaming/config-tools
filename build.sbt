@@ -6,23 +6,21 @@ homepage := Some(new URL("http://github.com/evolution-gaming/config-tools"))
 
 startYear := Some(2017)
 
-organizationName := "Evolution Gaming"
+organizationName := "Evolution"
 
-organizationHomepage := Some(url("http://evolutiongaming.com"))
+organizationHomepage := Some(url("http://evolution.com"))
 
-bintrayOrganization := Some("evolutiongaming")
+publishTo := Some(Resolver.evolutionReleases)
 
 scalaVersion := crossScalaVersions.value.head
 
-crossScalaVersions := Seq("2.13.0", "2.12.9")
+crossScalaVersions := Seq("2.13.10", "2.12.17", "3.2.1")
 
 scalacOptions in (Compile,doc) ++= Seq("-groups", "-implicits", "-no-link-warnings")
 
-resolvers += Resolver.bintrayRepo("evolutiongaming", "maven")
-
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.3.4",
-  "org.scalatest" %% "scalatest" % "3.0.8" % Test)
+  "org.scalatest" %% "scalatest" % "3.2.14" % Test)
 
 licenses := Seq(("MIT", url("https://opensource.org/licenses/MIT")))
 

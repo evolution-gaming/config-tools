@@ -2,11 +2,12 @@ package com.evolutiongaming.config
 
 import com.evolutiongaming.config.ConfigHelper._
 import com.typesafe.config.{Config, ConfigException, ConfigFactory}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should._
 
 import scala.concurrent.duration._
 
-class ConfigHelperSpec extends FunSuite with Matchers {
+class ConfigHelperSpec extends AnyFunSuite with Matchers {
 
   test("get") {
     val config = ConfigFactory.parseString("key:value")
