@@ -7,20 +7,28 @@ import scala.collection.JavaConverters._
 import scala.concurrent.duration.{Duration, FiniteDuration, MILLISECONDS}
 import scala.util.Try
 
-
 object ConfigHelper {
 
   implicit class ConfigOps(val config: Config) extends AnyVal {
 
-    def get[T](path: String)(implicit fromConf: FromConf[T]): T = fromConf(config, path)
+    def get[T](
+      path: String,
+    )(implicit
+      fromConf: FromConf[T],
+    ): T = fromConf(config, path)
 
-    def getOpt[T](path: String, paths: String*)(implicit fromConf: FromConf[Option[T]]): Option[T] = {
+    def getOpt[T](
+      path: String,
+      paths: String*,
+    )(implicit
+      fromConf: FromConf[Option[T]],
+    ): Option[T] = {
       @tailrec def getOpt(paths: List[String]): Option[T] = paths match {
-        case Nil           => None
+        case Nil => None
         case path :: paths => get[Option[T]](path) match {
-          case None        => getOpt(paths)
-          case Some(value) => Some(value)
-        }
+            case None => getOpt(paths)
+            case Some(value) => Some(value)
+          }
       }
 
       getOpt(path :: paths.toList)
@@ -97,7 +105,10 @@ object ConfigHelper {
       }
     }
 
-    implicit def optionFromConf[T](implicit fromConf: FromConf[T]): FromConf[Option[T]] = new FromConf[Option[T]] {
+    implicit def optionFromConf[T](
+      implicit
+      fromConf: FromConf[T],
+    ): FromConf[Option[T]] = new FromConf[Option[T]] {
       def apply(config: Config, path: String): Option[T] = {
         if (config hasPath path) Some(config.get[T](path)) else None
       }
@@ -109,7 +120,8 @@ object ConfigHelper {
   }
 
   private def parseList[A](conf: Config, path: String, f: String => A)(fromConf: => List[A]): List[A] = {
-    try fromConf catch {
+    try fromConf
+    catch {
       case failure: ConfigException.WrongType =>
 
         def fallback(): List[A] = throw failure
@@ -119,18 +131,17 @@ object ConfigHelper {
         val str = safe(conf.getString(path))
 
         str.fold(fallback()) { str =>
-
           def parse(separator: String) = str.trim.split(separator).map(_.trim).filter(_.nonEmpty)
 
           val aa = List(parse(","), parse(";")).maxBy(_.length)
 
           @tailrec
           def loop(aa: List[String], bb: List[A]): List[A] = aa match {
-            case Nil     => bb.reverse
+            case Nil => bb.reverse
             case a :: aa => safe(f(a)) match {
-              case Some(b) => loop(aa, b :: bb)
-              case None    => fallback()
-            }
+                case Some(b) => loop(aa, b :: bb)
+                case None => fallback()
+              }
           }
 
           loop(aa.toList, Nil)
