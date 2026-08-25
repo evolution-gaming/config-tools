@@ -38,7 +38,8 @@ class ConfigHelperSpec extends AnyFunSuite with Matchers {
       "key:[1 ,2 ]",
       "key:[ 1 , 2 ]",
       """key:"1 ,2 """",
-      "key: 1; 2")
+      "key: 1; 2",
+    )
   } {
     val config = ConfigFactory.parseString(str)
 
@@ -47,14 +48,15 @@ class ConfigHelperSpec extends AnyFunSuite with Matchers {
     }
 
     test(s"return long list from $str") {
-      config.get[List[Long]]("key") shouldEqual List(1l, 2l)
+      config.get[List[Long]]("key") shouldEqual List(1L, 2L)
     }
   }
 
   for {
     str <- List(
       """key:"" """,
-      """key:" " """)
+      """key:" " """,
+    )
   } {
 
     val config = ConfigFactory.parseString(str)
@@ -84,7 +86,8 @@ class ConfigHelperSpec extends AnyFunSuite with Matchers {
     str <- List(
       "key:[str]",
       "key:str",
-      """key:"str" """)
+      """key:"str" """,
+    )
   } {
     val config = ConfigFactory.parseString(str)
 
@@ -109,7 +112,8 @@ class ConfigHelperSpec extends AnyFunSuite with Matchers {
     str <- List(
       "key:[1s,2s]",
       """key:"1s,2s"""",
-      "key:1s;2s")
+      "key:1s;2s",
+    )
   } {
     test(s"return duration list from $str") {
       val config = ConfigFactory.parseString(str)
@@ -121,7 +125,8 @@ class ConfigHelperSpec extends AnyFunSuite with Matchers {
     str <- List(
       "key:[1.1,2.2]",
       """key:"1.1,2.2"""",
-      "key:1.1;2.2")
+      "key:1.1;2.2",
+    )
   } {
     test(s"return double list from $str") {
       val config = ConfigFactory.parseString(str)
@@ -133,7 +138,8 @@ class ConfigHelperSpec extends AnyFunSuite with Matchers {
     str <- List(
       "key:[a,b]",
       """key:"a,b"""",
-      "key:a;b")
+      "key:a;b",
+    )
   } {
     test(s"return string list from $str") {
       val config = ConfigFactory.parseString(str)
@@ -145,7 +151,8 @@ class ConfigHelperSpec extends AnyFunSuite with Matchers {
     str <- List(
       "key:[true,false]",
       """key:"true,false"""",
-      "key:true;false")
+      "key:true;false",
+    )
   } {
     test(s"return boolean list from $str") {
       val config = ConfigFactory.parseString(str)
